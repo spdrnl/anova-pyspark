@@ -23,7 +23,7 @@ def calc_f_probability(f_value, df_between, df_within):
 
 def calc(df: DataFrame, conditions_column: str = 'condition', measurements_col: str = 'measurement') -> DataFrame:
     """
-    Calculates one-way ANOVA statistics using PySpark.
+    Calculates one-way ANOVA statistics using PySpark. Outputs all the values in a dataframe.
 
     :param df: A DataFrame with the data.
     :param conditions_column: The column that indicates the condition or level.
