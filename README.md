@@ -6,6 +6,19 @@ The goal of the package is to provide compact PySpark code.
 
 The calculations are tested against scipy.
 
+The application can run an ANOVA on a dataframe with the following format:
+```
+condition, measurement
+c1, 5.0
+c1, 6.0
+c2, 3.0
+c2, 2.0
+...
+
+```
+
+The names of these columns are configurable.
+
 The application can be run locally on a dataframe that provides a column with the conditions and a column with the measurements.
 Install the application with Poetry:
 

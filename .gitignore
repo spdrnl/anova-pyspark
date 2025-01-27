@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 one_way_out.csv/
+one_way_out.parquet/
 submit-script.sh
 
 # C extensions
