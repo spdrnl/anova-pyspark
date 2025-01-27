@@ -6,7 +6,7 @@ The goal of the package is to provide compact PySpark code.
 
 The calculations are tested against scipy.
 
-The application can run an ANOVA on a dataframe with the following format:
+The application can run an ANOVA on any dataframe that has the following type of columns:
 ```
 condition, measurement
 c1, 5.0
