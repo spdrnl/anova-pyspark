@@ -69,6 +69,18 @@ def calc(df: DataFrame, conditions_column: str = 'condition', measurements_col: 
 @click.option('--output-path', required=True, help='The path to the output data.')
 @click.option('--output-format', default='parquet', help='The format of the output data.')
 def main(input_path: str, input_format: str, condition_col: str, measurement_col: str, output_path: str, output_format: str):
+    """
+    The main entry point for the application.
+
+    :param input_path: The path to the input data.
+    :param input_format: The input format csv or parquet.
+    :param condition_col: The name of the columns that contains the conditions.
+    :param measurement_col: The na,e of the column that contains the measurements.
+    :param output_path: The path to the output file.
+    :param output_format: The output format csv or parquet.
+    :return:
+    """
+
     logger.info(f'Calculating a one-way ANOVA using the following parameters:')
     logger.info(f'input_path = {input_path}')
     logger.info(f'input_format = {input_format}')
