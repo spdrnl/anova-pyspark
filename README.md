@@ -1,7 +1,7 @@
 ANOVA-PySpark
 =============
 
-This package implements a simple one-way ANOVA using Apache Spark.
+This package implements a simple one-way ANOVA using Apache PySpark.
 
 The goal of the package is:
 - To provide compact PySpark code.
