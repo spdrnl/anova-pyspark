@@ -25,7 +25,7 @@ def spark_fixture():
 
 
 def read_test_data(spark_fixture, test_data_path):
-    return spark_fixture.read.csv(str(test_data_path), header=True, schema='group int, value int')
+    return spark_fixture.read.csv(str(test_data_path), header=True, inferSchema=True)
 
 
 def test_calc(spark_fixture, data_path_fixture):
@@ -33,9 +33,9 @@ def test_calc(spark_fixture, data_path_fixture):
     Test one-way ANOVA with some sample data.
 
     :param spark_fixture: Spark support from pytest.
-    :param test_data_path: Data path support from pytest.
+    :param data_path_fixture: Data path support from pytest.
     """
-    # Sample data schema: (group, value)
+    # Sample data schema: (conditions, measurements)
     # data = [(1, 1), (1, 2), (1, 5),
     #         (2, 2), (2, 4), (2, 2),
     #         (3, 2), (3, 3), (3, 4)]
@@ -44,13 +44,13 @@ def test_calc(spark_fixture, data_path_fixture):
     df = read_test_data(spark_fixture, data_path_fixture)
 
     # Calculate statistics
-    stats = one_way.calc(df, 'group', 'value').collect()[0]
+    stats = one_way.calc(df, 'condition', 'measurement').collect()[0]
 
     # Create scipy reference data
     pandas_df = pd.read_csv(data_path_fixture)
-    group1 = pandas_df[pandas_df['group'] == 1]['value'].values
-    group2 = pandas_df[pandas_df['group'] == 2]['value'].values
-    group3 = pandas_df[pandas_df['group'] == 3]['value'].values
+    group1 = pandas_df[pandas_df['condition'] == 1]['measurement'].values
+    group2 = pandas_df[pandas_df['condition'] == 2]['measurement'].values
+    group3 = pandas_df[pandas_df['condition'] == 3]['measurement'].values
     reference_result = f_oneway(group1, group2, group3)
 
     # Test assertions
@@ -77,12 +77,12 @@ def test_assertions(spark_fixture, data_path_fixture):
 
     # Test dataframe not empty assertion
     with pytest.raises(AssertionError):
-        one_way.calc(df.filter(col('value') < 0), 'group', 'value').collect()[0]
+        one_way.calc(df.filter(col('measurement') < 0), 'group', 'value').collect()[0]
 
     # Test measurement column assertion
     with pytest.raises(AssertionError):
-        one_way.calc(df.withColumnRenamed('value', 'xyz'), 'group', 'value').collect()[0]
+        one_way.calc(df.withColumnRenamed('measurement', 'xyz'), 'group', 'value').collect()[0]
 
-    # Test group column assertion
+    # Test condition column assertion
     with pytest.raises(AssertionError):
-        one_way.calc(df.withColumnRenamed('group', 'xyz'), 'group', 'value').collect()[0]
+        one_way.calc(df.withColumnRenamed('condition', 'xyz'), 'group', 'value').collect()[0]

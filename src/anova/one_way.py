@@ -6,13 +6,15 @@ from pyspark.sql import functions as sf
 from pyspark.sql.dataframe import DataFrame
 from pyspark.sql.functions import col, udf
 from pyspark.sql.types import FloatType
-from scipy.stats import f
 
 logger = getLogger(__name__)
 
 
 @udf(returnType=FloatType())
 def calc_f_probability(f_value, df_between, df_within):
+    # Only import on worker
+    from scipy.stats import f
+
     # Calculate the probability
     p_value = 1 - f.cdf(f_value, df_between, df_within).item()
 
@@ -60,18 +62,18 @@ def calc(df: DataFrame, conditions_column: str = 'condition', measurements_col: 
 
 
 @click.command()
-@click.option('--input-path', help='The path to the input data')
-@click.option('--input-format', default='parquet', help='The format of the input data')
-@click.option('--conditions-col', help='The column containing the conditions.')
-@click.option('--measurements-col', help='The column containing the measurements.')
-@click.option('--output-path', help='The path to the output data')
-@click.option('--output-format', default='parquet', help='The format of the output data')
-def main(input_path: str, input_format: str, conditions_col: str, measurements_col: str, output_path: str, output_format: str):
+@click.option('--input-path', required=True, help='The path to the input data.')
+@click.option('--input-format', default='parquet', help='The format of the input data (csv or parquet).')
+@click.option('--condition-col', default='condition', help='The column containing the conditions.')
+@click.option('--measurement-col', default='measurement', help='The column containing the measurements.')
+@click.option('--output-path', required=True, help='The path to the output data.')
+@click.option('--output-format', default='parquet', help='The format of the output data.')
+def main(input_path: str, input_format: str, condition_col: str, measurement_col: str, output_path: str, output_format: str):
     logger.info(f'Calculating a one-way ANOVA using the following parameters:')
     logger.info(f'input_path = {input_path}')
     logger.info(f'input_format = {input_format}')
-    logger.info(f'conditions_col = {conditions_col}')
-    logger.info(f'measurements_col = {measurements_col}')
+    logger.info(f'condition_col = {condition_col}')
+    logger.info(f'measurement_col = {measurement_col}')
     logger.info(f'output_path = {output_path}')
     logger.info(f'output_format = {output_format}')
 
@@ -79,19 +81,30 @@ def main(input_path: str, input_format: str, conditions_col: str, measurements_c
     spark = None
     try:
         # Create a Spark session
+        logger.info('Creating Spark session.')
         spark = SparkSession.builder.appName('One-way ANOVA').getOrCreate()
 
         # Check if the path exists
         # TODO
 
         # Create a dataframe
-        input_df = spark.read.load(path=input_path, format=input_format)
+        logger.info(f'Reading input data from {input_path} with format {input_format}.')
+        if input_format == 'csv':
+            logger.info('Reading csv file with header=True and inferSchema=True, which is slow.')
+            input_df = spark.read.csv(str(input_path), header=True, inferSchema=True)
+        elif input_format == 'parquet':
+            input_df = spark.read.parquet(str(input_path))
+        else:
+            logger.error(f'Found unsupported input format {input_format}. Supported formats are csv and parquet.')
+            return
 
         # Calculate the stats
-        output_df = calc(input_df, conditions_col, measurements_col)
+        logger.info('Performing one-way ANOVA test.')
+        output_df = calc(input_df, condition_col, measurement_col)
 
         # Output the results
-        output_df.write.save(path=output_path, format=output_format)
+        logger.info(f'Writing output data to {output_path} with format {output_format}.')
+        (output_df.write.option('header', 'true').mode('overwrite').save(path=output_path, format=output_format))
 
     except Exception as e:
         logger.error(e)

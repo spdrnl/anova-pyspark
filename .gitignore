@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+one_way_out.csv/
+submit-script.sh
+
 # C extensions
 *.so
 
