@@ -67,18 +67,10 @@ def calc(df: DataFrame, conditions_column: str = 'condition', measurements_col: 
 @click.option('--condition-col', default='condition', help='The column containing the conditions.')
 @click.option('--measurement-col', default='measurement', help='The column containing the measurements.')
 @click.option('--output-path', required=True, help='The path to the output data.')
-@click.option('--output-format', default='parquet', help='The format of the output data.')
+@click.option('--output-format', default='parquet', help='The format of the output (csv or parquest, but others could work.).')
 def main(input_path: str, input_format: str, condition_col: str, measurement_col: str, output_path: str, output_format: str):
     """
-    The main entry point for the application.
-
-    :param input_path: The path to the input data.
-    :param input_format: The input format csv or parquet.
-    :param condition_col: The name of the columns that contains the conditions.
-    :param measurement_col: The na,e of the column that contains the measurements.
-    :param output_path: The path to the output file.
-    :param output_format: The output format csv or parquet.
-    :return:
+    Calculate an ANOVA using PySpark.
     """
 
     logger.info(f'Calculating a one-way ANOVA using the following parameters:')
@@ -99,14 +91,10 @@ def main(input_path: str, input_format: str, condition_col: str, measurement_col
         # Check if the path exists
         # TODO
 
-        # Create a dataframe
+        # Read the input data or give up if the format is unknown
         logger.info(f'Reading input data from {input_path} with format {input_format}.')
-        if input_format == 'csv':
-            logger.info('Reading csv file with header=True and inferSchema=True, which is slow.')
-            input_df = spark.read.csv(str(input_path), header=True, inferSchema=True)
-        elif input_format == 'parquet':
-            input_df = spark.read.parquet(str(input_path))
-        else:
+        input_df = read_input(input_format, input_path, spark)
+        if input_df is None:
             logger.error(f'Found unsupported input format {input_format}. Supported formats are csv and parquet.')
             return
 
@@ -116,13 +104,48 @@ def main(input_path: str, input_format: str, condition_col: str, measurement_col
 
         # Output the results
         logger.info(f'Writing output data to {output_path} with format {output_format}.')
-        (output_df.write.option('header', 'true').mode('overwrite').save(path=output_path, format=output_format))
+        write_output(output_df, output_format, output_path)
 
     except Exception as e:
         logger.error(e)
     finally:
         if spark:
             spark.stop()
+
+
+def read_input(input_format, input_path, spark):
+    """
+    Utility function to write output.
+
+    :param input_format: The input format of the data.
+    :param input_path: The input path of the data.
+    :param spark: A spark helper.
+    :return: A DataFrame
+    """
+
+    # TODO: Create tests for this function.
+    if input_format == 'csv':
+        logger.info('Reading csv file with header=True and inferSchema=True, which is slow.')
+        input_df = spark.read.csv(str(input_path), header=True, inferSchema=True)
+    elif input_format == 'parquet':
+        input_df = spark.read.parquet(str(input_path))
+    else:
+        input_df = None
+    return input_df
+
+
+def write_output(output_df, output_format, output_path):
+    """
+    Utility function that outputs a dataframe.
+
+    :param output_df: The dataframe to write.
+    :param output_format: The output format (csv or parquet, but others could work).
+    :param output_path: The path to write to.
+    :return:
+    """
+
+    # TODO: Create tests for this function.
+    output_df.write.option('header', 'true').mode('overwrite').save(path=output_path, format=output_format)
 
 
 if __name__ == '__main__':

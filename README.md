@@ -40,13 +40,16 @@ Once installed locally the application can be run locally using the command show
 ```
 Usage: one-way-anova [OPTIONS]
 
+  Calculate an ANOVA using PySpark.
+
 Options:
-  --input-path TEXT       The path to the input data  [required]
-  --input-format TEXT     The format of the input data
+  --input-path TEXT       The path to the input data.  [required]
+  --input-format TEXT     The format of the input data (csv or parquet).
   --condition-col TEXT    The column containing the conditions.
   --measurement-col TEXT  The column containing the measurements.
-  --output-path TEXT      The path to the output data  [required]
-  --output-format TEXT    The format of the output data
+  --output-path TEXT      The path to the output data.  [required]
+  --output-format TEXT    The format of the output (csv or parquest, but
+                          others could work.).
   --help                  Show this message and exit.
 
 ```
