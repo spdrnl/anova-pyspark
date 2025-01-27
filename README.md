@@ -2,10 +2,15 @@ ANOVA-PySpark
 =============
 
 This package implements a simple one-way ANOVA using Apache Spark.
-The goal of the package is to provide compact PySpark code.
+
+The goal of the package is:
+- To provide compact PySpark code.
+- To provide a dataframe to dataframe transformation that can be used in workflows.
 
 The calculations are tested against scipy.
 
+Data requirements
+-----------------
 The application can run an ANOVA on any dataframe that has the following type of columns:
 ```
 condition, measurement
@@ -19,6 +24,8 @@ c2, 2.0
 
 The names of these columns are configurable.
 
+Installing
+----------
 The application can be run locally on a dataframe that provides a column with the conditions and a column with the measurements.
 Install the application with Poetry:
 
@@ -26,6 +33,8 @@ Install the application with Poetry:
 poetry install
 ```
 
+Running
+-------
 Once installed the application can be run locally using the command shown below.
 
 ```
@@ -41,4 +50,4 @@ Options:
   --help                  Show this message and exit.
 
 ```
-Note that the libraries should be provided during submission to a cluster.
+Note that the required libraries in the .toml file should be provided during submission to a cluster.
