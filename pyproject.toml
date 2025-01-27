@@ -1,0 +1,120 @@
+[tool.poetry]
+name = "anova-pyspark"
+version = "0.1.0"
+description = "This package implements Anova methods on PySpark"
+authors = ["None"]
+readme = "README.md"
+packages = [{ include = "anova", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pyspark = "^3.5.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+scipy = "^1.15.1"
+pandas = "^2.2.3"
+ruff = "^0.9.3"
+pre-commit = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+lint = "ruff check ."
+format = "ruff format ."
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "src"
+]
+
+[tool.ruff]
+line-length = 160
+target-version = "py310"
+fix = true
+unsafe-fixes = false
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "N", "B", "A", "C", "T", "Q", "RUF"]
+ignore = [
+    "D100", "D101", "D102", "D103", "D104",
+    "D401",
+    "F541",
+]
+exclude = [
+    # PyCharm
+    ".idea",
+    ".idea_modules",
+    "out",
+    "gen",
+    "__pycache__",
+    "*.pyc",
+    "*.pyo",
+    "*.pyd",
+    ".Python",
+    "*.so",
+
+    # Poetry
+    ".venv",
+    "venv",
+    "env",
+    "__pypackages__",
+    "dist",
+    "build",
+    "*.egg-info",
+    "poetry.lock",
+
+    # Git
+    ".git",
+    ".gitignore",
+
+    # Ruff
+    ".ruff_cache",
+
+    # Coverage
+    ".coverage",
+    "coverage.xml",
+    "htmlcov",
+
+    # MyPy
+    ".mypy_cache",
+
+    # Pytest
+    ".pytest_cache",
+    "pytest-report.html",
+
+    # Otros
+    ".tox",
+    ".eggs",
+    "*.egg",
+    "docs/_build",
+    "site",
+    "tmp",
+    "temp"
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "S101"]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-single-line = false
