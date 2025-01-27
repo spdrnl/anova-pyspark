@@ -24,6 +24,12 @@ c2, 2.0
 
 The names of these columns are configurable.
 
+Example output
+--------------
+```
+ss_within,df_within,ms_within,ss_between,df_between,ms_between,F,p_value
+13.333333333333334,6,2.2222222222222223,0.2222222222222232,2,0.1111111111111116,0.05000000000000022,0.9516215
+```
 Installing
 ----------
 The application can be installed locally on a dataframe that provides a column with the conditions and a column with the measurements.
