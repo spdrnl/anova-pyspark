@@ -60,4 +60,4 @@ Options:
 
 ```
 Alternatively the application ```anova.one_way``` can be submitted to a cluster.
-Note that the required libraries in the .toml file should be provided during submission to a cluster.
+Note that the required libraries in the .toml file should be provided during submission.
