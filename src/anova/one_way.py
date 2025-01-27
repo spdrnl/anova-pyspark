@@ -70,7 +70,7 @@ def calc(df: DataFrame, conditions_column: str = 'condition', measurements_col: 
 @click.option('--output-format', default='parquet', help='The format of the output (csv or parquest, but others could work.).')
 def main(input_path: str, input_format: str, condition_col: str, measurement_col: str, output_path: str, output_format: str):
     """
-    Calculate an ANOVA using PySpark.
+    Calculate an one-way ANOVA using PySpark.
     """
 
     logger.info(f'Calculating a one-way ANOVA using the following parameters:')
