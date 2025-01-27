@@ -7,11 +7,11 @@ The goal of the package is to provide compact PySpark code.
 The calculations are tested against scipy.
 
 The application can be run locally on a dataframe that provides a column with the conditions and a column with the measurements.
-Install with Poetry:
+Install the application with Poetry:
 
-'''
+```
 poetry install
-'''
+```
 
 Once installed the application can be run locally using the command shown below.
 
