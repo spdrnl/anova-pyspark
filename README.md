@@ -26,7 +26,7 @@ The names of these columns are configurable.
 
 Installing
 ----------
-The application can be run locally on a dataframe that provides a column with the conditions and a column with the measurements.
+The application can be installed locally on a dataframe that provides a column with the conditions and a column with the measurements.
 Install the application with Poetry:
 
 ```
@@ -35,7 +35,7 @@ poetry install
 
 Running
 -------
-Once installed the application can be run locally using the command shown below.
+Once installed locally the application can be run locally using the command shown below.
 
 ```
 Usage: one-way-anova [OPTIONS]
@@ -50,4 +50,5 @@ Options:
   --help                  Show this message and exit.
 
 ```
+Alternatively the application ```anova.one_way``` can be submitted to a cluster.
 Note that the required libraries in the .toml file should be provided during submission to a cluster.
