@@ -1,5 +1,6 @@
 [tool.poetry]
 name = "anova-pyspark"
+license = "MIT"
 version = "0.1.0"
 description = "This package implements Anova methods on PySpark"
 authors = ["None"]
